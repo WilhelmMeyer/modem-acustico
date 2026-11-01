@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Enlace</title>
+<link rel="stylesheet" href="fontes/fontes.css">
+<style>
+:root {
+  --preto: #232220; --preto-fundo: #1b1a18; --preto-janela: #161513; --preto-borda: #3a3732;
+  --poco: #0b0a09; --tecla: #0d0c0b;
+  --osso: #e8dfc8; --osso-2: #c9bfa6; --caqui: #a89a6e; --caqui-escuro: #6f6548;
+  --vidro: #ece0bd; --vidro-2: #e2d3a8; --papel: #efe6cf;
+  --tinta: #2e231b; --tinta-2: #5b4736; --tinta-3: #6a5844;
+  --envio: #a6532f; --envio-claro: #d39a78; --envio-botao: #8a3b22;
+  --chega: #4d6b8c; --chega-claro: #93abc4; --chega-botao: #3d5775;
+  --ambar: #f1b24a; --alarme: #b8402a; --alarme-tecla: #8f2e1d; --olho: #8fe0a2; --agulha: #8e2414;
+  --r: 2px; --funda: inset 0 1px 3px rgba(0,0,0,.6);
+  --gothic: "League Gothic", "Arial Narrow", sans-serif;
+  --jost: "Jost", system-ui, sans-serif;
+  --courier: "Courier Prime", "Courier New", monospace;
+  --craquelado: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='turbulence' baseFrequency='.055' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 1.25'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)' opacity='.24'/%3E%3C/svg%3E");
+  --parafuso: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Ccircle cx='5' cy='5' r='4.5' fill='%234a463e' stroke='%23131210'/%3E%3Cpath d='M2 3.2 8 6.8' stroke='%23131210' stroke-width='1.2'/%3E%3C/svg%3E");
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { background: var(--preto-fundo); }
+body {
+  margin: 0; min-height: 100vh; color: var(--osso); font: 400 15px/1.45 var(--jost);
+  background: var(--craquelado), var(--preto-fundo);
+  padding: 12px 12px 92px; display: flex; flex-direction: column; gap: 10px;
+  overscroll-behavior: none;
+}
+::selection { background: var(--ambar); color: var(--tinta); }
+.placa { display: flex; align-items: center; justify-content: space-between; padding: 2px 2px 0; gap: 12px; }
+h1 { margin: 0; font: 400 30px/1 var(--gothic); letter-spacing: .14em; text-transform: uppercase; }
+.protocolo { font: 400 12px/1 var(--courier); color: var(--osso-2); }
+
+.chapa {
+  position: relative; padding: 14px 16px 16px; border: 1px solid var(--preto-borda); border-radius: var(--r);
+  background: var(--craquelado), var(--preto); box-shadow: 0 4px 12px -4px rgba(0,0,0,.6);
+}
+.chapa::before {
+  content: ""; position: absolute; inset: 3px; pointer-events: none;
+  background: var(--parafuso) 0 0/8px no-repeat, var(--parafuso) 100% 0/8px no-repeat,
+              var(--parafuso) 0 100%/8px no-repeat, var(--parafuso) 100% 100%/8px no-repeat;
+}
+.rotulo {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin: 0 0 11px; padding-bottom: 6px; border-bottom: 1px solid var(--caqui-escuro);
+  font: 400 19px/1 var(--gothic); letter-spacing: .12em; text-transform: uppercase;
+}
+.lampada {
+  flex: none; width: 14px; height: 14px; border-radius: 50%; background: #3b3630;
+  box-shadow: 0 0 0 2px var(--poco), 0 0 0 3px var(--caqui-escuro);
+}
+.lampada.acesa { background: var(--ambar); box-shadow: 0 0 0 2px var(--poco), 0 0 0 3px var(--caqui-escuro), 0 1px 9px 2px rgba(241,178,74,.55); }
+.lampada.verde { background: var(--olho); box-shadow: 0 0 0 2px var(--poco), 0 0 0 3px var(--caqui-escuro), 0 1px 9px 2px rgba(143,224,162,.5); }
+.lampada.alarme { background: var(--alarme); box-shadow: 0 0 0 2px var(--poco), 0 0 0 3px var(--caqui-escuro), 0 1px 9px 2px rgba(184,64,42,.65); }
+.lampada.pisca { animation: pisca 1.1s steps(2, jump-none) infinite; }
+@keyframes pisca { from { opacity: 1; } to { opacity: .35; } }
+
+/* Mostrador: a escala é a do visor do PC, 400-4600 Hz, grade de 162,5 Hz. */
+.aro { padding: 7px; background: #0e0d0b; border-radius: var(--r); box-shadow: var(--funda); }
+.vidro { display: block; width: 100%; height: auto; background: linear-gradient(var(--vidro), var(--vidro-2)); filter: sepia(.28) brightness(.82); transition: filter .4s ease-out; }
+.ligada .vidro { filter: none; }
+.vidro text { font-family: var(--courier); font-size: 9px; fill: var(--tinta-2); }
+.cascata { display: block; width: 100%; height: 150px; margin-top: 5px; background: var(--papel); }
+.atividade { margin: 9px 0 0; min-height: 21px; font-size: 14px; color: var(--osso-2); }
+
+.percurso { margin: 0; padding: 0; list-style: none; }
+.percurso li { position: relative; display: grid; grid-template-columns: 22px 1fr; column-gap: 8px; padding: 0 0 8px; }
+.percurso li::before { content: ""; position: absolute; left: 6px; top: 4px; bottom: -4px; width: 2px; background: var(--caqui-escuro); }
+.percurso li:last-child { padding-bottom: 0; } .percurso li:last-child::before { display: none; }
+.percurso li.feita::before { background: var(--olho); opacity: .55; }
+.percurso .lampada { position: relative; margin-top: 1px; }
+.percurso b { font: 400 17px/1.15 var(--gothic); letter-spacing: .08em; text-transform: uppercase; color: var(--caqui); }
+.percurso .feita b, .percurso .agora b { color: var(--osso); } .percurso .falhou b { color: var(--alarme); }
+.percurso .cabeca { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.andamento { font: 700 12.5px/1.2 var(--courier); font-variant-numeric: tabular-nums; }
+.andamento::before { content: ""; display: inline-block; margin-right: 6px; border-style: solid; border-width: 4px 0 4px 7px; border-color: transparent transparent transparent currentColor; }
+.andamento.envio { color: var(--envio-claro); }
+.andamento.chega { color: var(--chega-claro); } .andamento.chega::before { transform: rotate(180deg); }
+.percurso .valores { grid-column: 2; display: flex; flex-wrap: wrap; gap: 1px 11px; margin-top: 1px; }
+.percurso .valores span { font: 400 13px/1.3 var(--gothic); letter-spacing: .05em; text-transform: uppercase; color: var(--osso-2); white-space: nowrap; }
+.percurso .valores span.longo { white-space: normal; }
+.percurso .valores em { font: 700 12.5px/1.3 var(--courier); font-style: normal; letter-spacing: 0; text-transform: none; color: var(--ambar); font-variant-numeric: tabular-nums; }
+.percurso .valores .envio em { color: var(--envio-claro); } .percurso .valores .chega em { color: var(--chega-claro); }
+.percurso .valores span.tem-regua { flex: 1 0 100%; white-space: normal; }
+.regua { display: flex; gap: 2px; margin: 2px 0 3px; }
+.regua i { flex: 1; height: 12px; min-width: 0; background: var(--poco); }
+.regua .usado { background: currentColor; }
+.envio .regua { color: var(--envio-claro); } .chega .regua { color: var(--chega-claro); }
+.regua .excluido { background: linear-gradient(45deg, transparent 44%, var(--alarme) 44% 56%, transparent 56%), linear-gradient(-45deg, transparent 44%, var(--alarme) 44% 56%, transparent 56%), var(--poco); }
+.regua .reserva { background: var(--poco); box-shadow: inset 0 0 0 1px var(--caqui-escuro); }
+.regua .nm { background: linear-gradient(transparent 44%, var(--caqui-escuro) 44% 56%, transparent 56%), var(--poco); }
+.percurso em u { text-decoration: none; background: var(--ambar); color: var(--tinta); padding: 0 2px; }
+
+.instrumentos { display: grid; grid-template-columns: 58px 1fr; gap: 14px; align-items: center; }
+.olho { width: 58px; height: 58px; border-radius: 50%; background: conic-gradient(from calc(180deg - var(--abre, 8deg)), #0f2b17 0 calc(var(--abre, 8deg) * 2), var(--olho) 0); box-shadow: 0 0 0 3px var(--poco), 0 0 0 4px var(--caqui-escuro); position: relative; transition: --abre .2s; opacity: .45; }
+.ligada .olho { opacity: 1; }
+.olho::after { content: ""; position: absolute; inset: 20px; border-radius: 50%; background: var(--poco); }
+.leituras { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 12px; margin: 0; }
+.leituras div { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.leituras dt { font: 400 15px/1 var(--gothic); letter-spacing: .1em; text-transform: uppercase; color: var(--osso-2); }
+.leituras dd, output { margin: 0; min-width: 56px; padding: 4px 6px; text-align: right; background: var(--poco); box-shadow: var(--funda); color: var(--ambar); font: 700 14px/1 var(--courier); font-variant-numeric: tabular-nums; }
+.mal { background: var(--alarme) !important; color: #fff1e6 !important; }
+.contagem { margin-top: 13px; display: grid; gap: 9px; }
+.contagem .linha { display: flex; justify-content: space-between; align-items: center; font: 400 15px/1 var(--gothic); letter-spacing: .1em; text-transform: uppercase; color: var(--osso-2); }
+.barra { height: 4px; margin-top: 5px; background: var(--poco); }
+.barra i { display: block; height: 100%; width: 0; transition: width .4s ease-out; }
+.envio i { background: var(--envio-claro); } .envio .linha span { color: var(--envio-claro); }
+.chega i { background: var(--chega-claro); } .chega .linha span { color: var(--chega-claro); }
+.contratos { margin: 11px 0 0; display: grid; gap: 5px; font: 400 13px/1.2 var(--courier); color: var(--osso-2); }
+
+.chave { display: grid; grid-template-columns: 1fr 1fr; padding: 3px; background: var(--poco); box-shadow: var(--funda); border-radius: var(--r); margin-bottom: 10px; }
+.chave label { position: relative; text-align: center; }
+.chave input { position: absolute; opacity: 0; inset: 0; margin: 0; }
+.chave span { display: block; padding: 11px 0 10px; color: var(--osso-2); font: 400 19px/1 var(--gothic); letter-spacing: .12em; text-transform: uppercase; }
+.chave input:checked + span { color: #fff4e4; }
+.chave input[value=chamador]:checked + span { background: var(--envio-botao); }
+.chave input[value=ouvinte]:checked + span { background: var(--chega-botao); color: #f1f5fb; }
+.chave input:focus-visible + span { outline: 2px solid var(--ambar); outline-offset: -2px; }
+.chave input:disabled + span { opacity: .55; }
+.modo { margin-top: 10px; }
+.chave.negociacao { margin: 0 0 10px; }
+.chave input[value=negociado]:checked + span, .chave input[value=manual]:checked + span { background: var(--caqui-escuro); color: var(--osso); }
+.parametros { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 12px; margin-bottom: 10px; }
+.parametros[hidden] { display: none; }
+.parametros label { display: grid; gap: 5px; font: 400 15px/1 var(--gothic); letter-spacing: .1em; text-transform: uppercase; color: var(--osso-2); }
+.parametros input, .parametros select { width: 100%; min-width: 0; padding: 9px 8px; font: 700 15px/1.2 var(--courier); color: var(--ambar); caret-color: var(--ambar); background: var(--poco); border: 1px solid var(--caqui-escuro); border-radius: 0; box-shadow: var(--funda); }
+.parametros input::placeholder { color: var(--osso-2); opacity: .75; font-weight: 400; }
+.parametros select:focus-visible { outline: 2px solid var(--ambar); outline-offset: 1px; }
+.parametros .ack { grid-column: 1 / -1; display: flex; align-items: center; gap: 9px; }
+.parametros .ack input { width: 18px; height: 18px; accent-color: var(--ambar); }
+.nota { grid-column: 1 / -1; margin: 0; font: 500 13px/1.35 var(--jost); color: var(--osso-2); }
+.alerta-linha { margin: 7px 0 0; padding: 6px 8px; color: #fff1e6; background: var(--alarme-tecla); font-size: 14px; }
+.alerta-linha[hidden] { display: none; }
+.campo { display: flex; gap: 8px; }
+.campo input { flex: 1; min-width: 0; padding: 10px; font: 400 16px/1.3 var(--jost); color: var(--osso); caret-color: var(--ambar); background: var(--preto-janela); border: 1px solid var(--caqui-escuro); border-radius: 0; box-shadow: var(--funda); }
+.campo input::placeholder { color: var(--osso-2); opacity: .8; }
+input:focus-visible, button:focus-visible { outline: 2px solid var(--ambar); outline-offset: 1px; }
+/* Segurar um botão não pode selecionar texto: a seleção cancela o toque e Parar nunca completa. */
+button, label, .chave, .comando, h1, .rotulo, .fases, .leituras dt, .linha { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.comando button { touch-action: none; }
+button { padding: 11px 14px 10px; color: var(--osso); background: var(--tecla); border: 1px solid var(--caqui-escuro); border-radius: var(--r); box-shadow: 0 2px 5px rgba(0,0,0,.5); font: 400 19px/1 var(--gothic); letter-spacing: .12em; text-transform: uppercase; }
+button:active:not(:disabled) { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,.5); }
+button:disabled { opacity: .4; }
+
+.comando { position: fixed; left: 0; right: 0; bottom: 0; z-index: 2; padding: 10px 12px calc(12px + env(safe-area-inset-bottom)); background: var(--craquelado), var(--preto-fundo); border-top: 1px solid var(--caqui-escuro); }
+.comando button { width: 100%; padding: 16px 15px 15px; font-size: 24px; color: #f1f5fb; background: var(--chega-botao); border-color: transparent; }
+body[data-papel=chamador] .comando button { color: #fff4e4; background: var(--envio-botao); }
+.ligada .comando button, body[data-papel].ligada .comando button { position: relative; overflow: hidden; color: #fff1e6; background: #2a120c; border-color: var(--alarme-tecla); }
+.comando .enche { position: absolute; inset: 0; background: var(--alarme-tecla); transform: scaleX(0); transform-origin: left; }
+.comando .enche.segura { transform: scaleX(1); transition: transform .9s linear; }
+.comando b { position: relative; font-weight: 400; }
+
+.papel { min-height: 56px; padding: 8px 12px; color: var(--tinta); background: repeating-linear-gradient(transparent 0 20px, rgba(91,71,54,.12) 20px 21px), var(--papel); font: 400 13px/21px var(--courier); overflow-wrap: anywhere; box-shadow: var(--funda); }
+.papel.vazio { color: var(--tinta-3); font-family: var(--jost); }
+.conversa { max-height: 240px; overflow-y: auto; }
+.conversa + .campo { margin-top: 10px; }
+.papel.hex[hidden] { display: none; }
+#fita-bytes { margin-top: 10px; }
+.conversa p { margin: 0; }
+.conversa .ele { color: #2d4664; }
+.conversa .eu { color: #8a3b22; text-align: right; }
+.papel.hex { max-height: 168px; overflow-y: auto; white-space: pre; font-size: 12px; overflow-wrap: normal; }
+#imagem { display: none; width: 100%; max-width: 288px; margin: 10px auto 2px; image-rendering: pixelated; background: var(--papel); }
+.fita { height: 42vh; min-height: 240px; overflow-y: auto; }
+.fita p { margin: 0; padding-left: 2.5ch; text-indent: -2.5ch; }
+.fita .alerta { color: #8c2d16; font-weight: 700; } .fita .abre { color: #23426a; }
+.fita .contrato { color: #3b2a1c; font-weight: 700; } .fita .local { color: #4f5a2e; }
+.fita::-webkit-scrollbar { width: 6px; } .fita::-webkit-scrollbar-thumb { background: var(--caqui-escuro); }
+.recolhe summary { list-style: none; margin-bottom: 0; } .recolhe[open] summary { margin-bottom: 11px; }
+.recolhe summary::-webkit-details-marker { display: none; }
+.miudo { padding: 7px 10px 6px; font-size: 15px; box-shadow: none; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body data-papel="ouvinte">
+  <header class="placa">
+    <h1>Enlace</h1>
+    <span class="protocolo" id="protocolo" title="Hash do protocolo: tem de bater com o do PC"></span>
+  </header>
+
+  <section class="chapa" aria-label="Mostrador">
+    <div class="rotulo"><span>Mostrador</span><span class="lampada" id="l-vivo" title="Ouvindo o microfone"></span></div>
+    <div class="aro">
+      <svg class="vidro" id="vidro" viewBox="0 0 360 112" role="img" aria-label="Espectro de 400 a 4600 Hz">
+        <g id="escala"></g>
+        <polyline id="traco" fill="none" stroke="#b5741a" stroke-width="1.4"></polyline>
+        <g id="agulha" opacity="0"><line y1="0" y2="112" stroke="#8e2414" stroke-width="1.6"></line><text id="agulha-f" y="10" style="fill:#8e2414;font-weight:700"></text></g>
+      </svg>
+      <canvas class="cascata" id="cascata" role="img" aria-label="Cascata: o espectro dos últimos segundos, mesma escala do mostrador"></canvas>
+    </div>
+    <p class="alerta-linha" id="alerta" role="alert" hidden></p>
+  </section>
+
+  <section class="chapa" aria-label="Etapas">
+    <ol class="percurso" id="percurso"></ol>
+  </section>
+
+  <section class="chapa" aria-label="Instrumentos">
+    <div class="instrumentos">
+      <div class="olho" id="olho" title="Nível do microfone"></div>
+      <dl class="leituras">
+        <div><dt>Nível</dt><dd id="v-nivel">--</dd></div>
+        <div><dt>Tempo</dt><dd id="v-tempo">--</dd></div>
+        <div><dt>Atraso</dt><dd id="v-fila" title="Áudio esperando na fila. Acima de 2 s a estação responde a sons velhos.">--</dd></div>
+        <div><dt>Perdida</dt><dd id="v-perdida" title="Entrada que o microfone perdeu">--</dd></div>
+      </dl>
+    </div>
+    <div class="contagem">
+      <div class="envio"><div class="linha">Enviados <span id="v-env">0 de 0 B</span></div><div class="barra"><i id="b-env"></i></div></div>
+      <div class="chega"><div class="linha">Recebidos <span id="v-rec">0 B</span></div><div class="barra" id="barra-rec" hidden><i id="b-rec"></i></div></div>
+    </div>
+  </section>
+
+  <section class="chapa" aria-label="Sessão">
+    <div class="chave" role="radiogroup" aria-label="Papel">
+      <label><input type="radio" name="papel" value="ouvinte" checked><span>Ouvinte</span></label>
+      <label><input type="radio" name="papel" value="chamador"><span>Chamador</span></label>
+    </div>
+    <div class="chave negociacao" role="radiogroup" aria-label="Como acertar o enlace">
+      <label><input type="radio" name="negociacao" value="negociado" checked><span>Negociado</span></label>
+      <label><input type="radio" name="negociacao" value="manual"><span>Manual</span></label>
+    </div>
+    <div class="parametros" id="parametros" hidden>
+      <label>Modulação<select id="m-modulacao">
+        <option value="16fsk">16-FSK</option><option value="8fsk">8-FSK</option>
+        <option value="4fsk">4-FSK</option><option value="2fsk">2-FSK</option>
+        <option value="votada">5×2 votada</option><option value="multicanal">5×2 multicanal</option>
+      </select></label>
+      <label>Velocidade, baud<input id="m-baud" type="number" inputmode="numeric" min="5" max="300" value="100"></label>
+      <label>Repetição<input id="m-rep" type="number" inputmode="numeric" min="1" max="8" value="1"></label>
+      <label>Volume da caixa<select id="m-caixa">
+        <option value="0">15%</option><option value="1">20%</option><option value="2" selected>30%</option>
+        <option value="3">40%</option><option value="4">55%</option><option value="5">70%</option><option value="6">100%</option>
+      </select></label>
+      <label>Tom base, Hz<input id="m-base" type="number" inputmode="numeric" min="300" max="6000" placeholder="de fábrica"></label>
+      <label>Passo do tom, Hz<input id="m-passo" type="number" inputmode="numeric" min="20" max="1000" placeholder="de fábrica"></label>
+      <label class="ack"><input id="m-ack" type="checkbox" checked>Confirmar quadros</label>
+    </div>
+  </section>
+
+  <section class="chapa" aria-label="Conversa">
+    <div class="rotulo"><span>Conversa</span></div>
+    <div class="papel conversa vazio" id="chegou" role="log">Nada ainda.</div>
+    <div class="campo">
+      <input id="texto" placeholder="Texto a enviar" autocomplete="off" enterkeyhint="send">
+      <button id="enviar" disabled>Enviar</button>
+    </div>
+    <div class="papel hex" id="fita-bytes" hidden></div>
+    <img id="imagem" alt="Imagem recebida pelo ar">
+  </section>
+
+  <details class="chapa recolhe" aria-label="Diário">
+    <summary class="rotulo"><span>Diário</span><button class="miudo" id="repetir" title="Passa replay.wav pela estação, sem som">Repetir gravação</button></summary>
+    <div class="papel fita" id="fita" role="log"></div>
+  </details>
+
+  <div class="comando"><button id="acao"><span class="enche" id="enche"></span><b id="acao-t">Iniciar</b></button></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const nativo = window.ponte || {iniciar() {}, parar() {}, enviar() {}, repetir() {}};
+const F0 = 400, F1 = 4600, X = f => (f - F0) / (F1 - F0) * 360;
+const SVG = 'http://www.w3.org/2000/svg';
+
+(function escala() {
+  const g = $('escala'); let h = '';
+  for (let k = 0; k < 25; k++) {
+    const x = X(562.5 + 162.5 * k).toFixed(1);
+    h += `<line x1="${x}" x2="${x}" y1="88" y2="${k % 4 ? 92 : 96}" stroke="#5b4736" stroke-width=".7"/>`;
+  }
+  for (const f of [1000, 2000, 3000, 4000]) h += `<text x="${X(f)}" y="107" text-anchor="middle">${f}</text>`;
+  h += '<line x1="0" x2="360" y1="88" y2="88" stroke="#5b4736" stroke-width=".7"/>';
+  g.innerHTML = h;
+})();
+
+function espectro(db) {
+  if (!db || !db.length) { $('traco').setAttribute('points', ''); $('agulha').setAttribute('opacity', 0); return; }
+  const y = v => 84 - Math.max(0, Math.min(1, (v + 90) / 70)) * 78;
+  let melhor = 0;
+  const pts = db.map((v, i) => { if (v > db[melhor]) melhor = i; return `${(i + .5) / db.length * 360},${y(v).toFixed(1)}`; });
+  $('traco').setAttribute('points', pts.join(' '));
+  const mediana = [...db].sort((a, b) => a - b)[db.length >> 1];
+  if (db[melhor] - mediana < 12) { $('agulha').setAttribute('opacity', 0); return; }
+  const x = (melhor + .5) / db.length * 360, f = F0 + x / 360 * (F1 - F0);
+  $('agulha').setAttribute('opacity', 1);
+  $('agulha').querySelector('line').setAttribute('x1', x); $('agulha').querySelector('line').setAttribute('x2', x);
+  const t = $('agulha-f'); t.textContent = Math.round(f / 10) * 10 + ' Hz';
+  t.setAttribute('x', x > 290 ? x - 4 : x + 4); t.setAttribute('text-anchor', x > 290 ? 'end' : 'start');
+}
+
+// A cascata cai no mesmo eixo do mostrador. A tinta diz quem fala: ferrugem é o
+// que esta estação manda, aço é o que ela escuta.
+const cascata = $('cascata'), cc = cascata.getContext('2d', {alpha: false});
+const PAPEL = '#efe6cf';
+let pisoCascata = [];
+function ajustaCascata() {
+  const r = cascata.getBoundingClientRect();
+  cascata.width = Math.max(1, Math.round(r.width * devicePixelRatio));
+  cascata.height = Math.max(1, Math.round(r.height * devicePixelRatio));
+}
+ajustaCascata();
+cc.fillStyle = PAPEL; cc.fillRect(0, 0, cascata.width, cascata.height);
+function caiLinha(db, tocando) {
+  if (!db || !db.length) return;
+  const h = Math.ceil(2 * devicePixelRatio), w = cascata.width;
+  cc.drawImage(cascata, 0, h);
+  // Tudo opaco: copiar pixels semitransparentes sobre si mesmos a cada linha
+  // arredonda as cores e deixa rastros vermelhos e verdes.
+  cc.fillStyle = PAPEL; cc.fillRect(0, 0, w, h);
+  const cor = tocando ? '138,59,34' : '45,70,100';
+  // Cada frequência contra o próprio piso, que desce rápido e sobe devagar: o que
+  // o microfone sempre ouve some, e só marca o que subiu acima disso e está perto
+  // do mais forte da linha. Sem o piso, o ruído do aparelho pinta a cascata inteira.
+  if (pisoCascata.length !== db.length) pisoCascata = db.slice();
+  const topo = Math.max(...db);
+  db.forEach((v, i) => {
+    pisoCascata[i] += v < pisoCascata[i] ? (v - pisoCascata[i]) * .3 : .1;
+    const a = Math.max(0, Math.min(1, (v - pisoCascata[i] - 10) / 22));
+    if (a <= 0 || v < topo - 30) return;
+    cc.fillStyle = `rgba(${cor},${a.toFixed(3)})`;
+    cc.fillRect(Math.floor(i / db.length * w), 0, Math.ceil(w / db.length), h);
+  });
+}
+
+// A conversa: o que chega à esquerda, em aço; o que sai à direita, em ferrugem.
+let jaLido = 0;
+function fala(quem, texto) {
+  const papel = $('chegou');
+  if (papel.classList.contains('vazio')) { papel.textContent = ''; papel.classList.remove('vazio'); }
+  if (!texto.trim()) return;
+  for (const l of texto.split('\n')) {
+    if (!l.trim()) continue;
+    const p = document.createElement('p');
+    p.className = quem; p.textContent = l;
+    papel.append(p);
+  }
+  papel.scrollTop = papel.scrollHeight;
+}
+
+// O que chegou, enquanto chega. Um BMP diz o próprio tamanho no cabeçalho: com o
+// resto em zeros ele já abre, e a imagem sobe linha a linha, de baixo para cima.
+let urlImagem = null;
+function dados(b64) {
+  const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0)), n = bytes.length;
+  // O que chega é um fluxo só: um BMP diz o próprio tamanho, e o que vem depois
+  // dele é conversa. Sem separar, a mensagem ficaria na fita de bytes.
+  const total = n >= 6 && bytes[0] === 0x42 && bytes[1] === 0x4d
+    ? new DataView(bytes.buffer).getUint32(2, true) : 0;
+  const fimArquivo = total ? Math.min(n, total) : 0;
+  if (total) {
+    $('v-rec').textContent = `${fimArquivo} de ${total} B`;
+    $('barra-rec').hidden = false;
+    $('b-rec').style.width = Math.min(100, fimArquivo / total * 100) + '%';
+    const cheio = new Uint8Array(total); cheio.set(bytes.subarray(0, fimArquivo));
+    if (urlImagem) URL.revokeObjectURL(urlImagem);
+    urlImagem = URL.createObjectURL(new Blob([cheio], {type: 'image/bmp'}));
+    $('imagem').src = urlImagem; $('imagem').style.display = 'block';
+  }
+  let resto = bytes.subarray(fimArquivo), texto = null;
+  try { texto = new TextDecoder('utf-8', {fatal: true}).decode(resto); }
+  catch (e) {   // pode ser só um caractere pela metade, no fim do que chegou
+    try { texto = new TextDecoder('utf-8', {fatal: true}).decode(resto.subarray(0, -1)); } catch (e2) {}
+  }
+  if (texto !== null && !/[\x00-\x08\x0e-\x1f]/.test(texto)) {
+    const fim = texto.lastIndexOf('\n') + 1;   // só linhas inteiras
+    if (fim > jaLido) { fala('ele', texto.slice(jaLido, fim)); jaLido = fim; }
+    resto = bytes.subarray(0, 0);
+  }
+  const fita = $('fita-bytes');
+  fita.hidden = !resto.length;
+  if (resto.length) {
+    let h = '';
+    for (let i = 0; i < resto.length; i += 8) {
+      const t = resto.subarray(i, i + 8);
+      h += i.toString(16).padStart(4, '0') + ' '
+         + [...t].map(b => b.toString(16).padStart(2, '0')).join(' ').padEnd(24)
+         + [...t].map(b => b >= 32 && b < 127 ? String.fromCharCode(b) : '.').join('') + '\n';
+    }
+    fita.textContent = h;
+    fita.scrollTop = fita.scrollHeight;
+  }
+}
+
+// O percurso vem pronto da estação (`percurso()` em enlace2 e enlace_manual): aqui só se desenha.
+function desenhaPercurso(p) {
+  const ol = $('percurso'); ol.textContent = '';
+  (p || []).forEach(e => {
+    const li = document.createElement('li'); li.className = e.situacao;
+    const l = document.createElement('span');
+    l.className = 'lampada' + ({feita: ' verde', agora: ' acesa pisca', falhou: ' alarme'}[e.situacao] || '');
+    li.append(l);
+    const c = document.createElement('div'); c.className = 'cabeca'; li.append(c);
+    const b = document.createElement('b'); b.textContent = e.nome; c.append(b);
+    if (e.andamento) {
+      const a = c.appendChild(document.createElement('span')); a.className = 'andamento ' + (e.andamento.sentido === 'enviando' ? 'envio' : 'chega');
+      a.textContent = e.andamento.sentido + (e.andamento.s != null ? ' ' + e.andamento.s + ' s' : '');
+    }
+    if (e.situacao !== 'falta' && e.valores && e.valores.length) {
+      const v = document.createElement('div'); v.className = 'valores';
+      e.valores.forEach(x => {
+        const s = document.createElement('span');
+        s.className = (x.lado || '') + (x.valor.length > 22 ? ' longo' : '');
+        s.append(x.rotulo + ' ');
+        const m = document.createElement('em');
+        const i = x.escolhido ? x.valor.indexOf(x.escolhido) : -1;
+        if (i >= 0) {
+          m.append(x.valor.slice(0, i));
+          const u = document.createElement('u'); u.textContent = x.escolhido; m.append(u);
+          m.append(x.valor.slice(i + x.escolhido.length));
+        } else m.textContent = x.valor;
+        s.append(m); v.append(s);
+        if (x.regua) {
+          s.className += ' tem-regua';
+          const g = document.createElement('div'); g.className = 'regua';
+          x.regua.forEach(t => {
+            const c = document.createElement('i'); c.className = t.estado; c.title = t.hz + ' Hz'; g.append(c);
+          });
+          s.append(g);
+        }
+      });
+      li.append(v);
+    }
+    ol.append(li);
+  });
+}
+
+const tela = {
+  protocolo(h) { $('protocolo').textContent = h; },
+  sessao(ligada) {
+    document.body.classList.toggle('ligada', ligada);
+    $('acao-t').textContent = ligada ? 'Segure para parar' : 'Iniciar';
+    $('enviar').disabled = !ligada; $('repetir').disabled = ligada;
+    document.querySelectorAll('[name=papel],[name=negociacao]').forEach(r => r.disabled = ligada);
+    document.querySelectorAll('#parametros input,#parametros select').forEach(c => c.disabled = ligada);
+    if (!ligada) $('alerta').hidden = true;
+    if (ligada) desenhaPercurso([]);
+    $('l-vivo').className = 'lampada' + (ligada ? ' acesa pisca' : '');
+    if (!ligada) { espectro(null); $('olho').style.setProperty('--abre', '8deg'); }
+  },
+  estado(e) {
+    desenhaPercurso(e.percurso);
+    espectro(e.espectro);
+    caiLinha(e.espectro, /tocando/.test(e.atividade || ''));
+    const db = e.rms > 0 ? 20 * Math.log10(e.rms) : -99;
+    $('v-nivel').textContent = db.toFixed(0) + ' dB';
+    // O olho fecha com o nível, como a válvula: -60 dB aberto, 0 dB fechado.
+    $('olho').style.setProperty('--abre', (6 + Math.max(0, Math.min(1, -db / 60)) * 74).toFixed(0) + 'deg');
+    $('alerta').hidden = !e.alerta; $('alerta').textContent = e.alerta || '';
+    $('v-tempo').textContent = Math.round(e.estacao_s) + ' s';
+    $('v-fila').textContent = e.fila_s.toFixed(1) + ' s'; $('v-fila').classList.toggle('mal', e.fila_s > 2);
+    $('v-perdida').textContent = e.perdidas_s.toFixed(1) + ' s'; $('v-perdida').classList.toggle('mal', e.perdidas_s > 0);
+    const total = e.enviados_total || 0, feitos = Math.max(0, total - e.a_enviar);
+    $('v-env').textContent = `${feitos} de ${total} B`;
+    $('b-env').style.width = (total ? feitos / total * 100 : 0) + '%';
+    if ($('barra-rec').hidden) $('v-rec').textContent = e.recebidos + ' B';
+    if (e.dados) dados(e.dados);
+  },
+  linha(s) {
+    const f = $('fita'), p = document.createElement('p'), fim = f.scrollHeight - f.scrollTop - f.clientHeight < 30;
+    p.textContent = s;
+    if (/ATENÇÃO|ERRO|ilegível|sem resposta/.test(s)) p.className = 'alerta';
+    else if (/acordado|tudo enviado|entregue/.test(s)) p.className = 'abre';
+    else if (/contrato/.test(s)) p.className = 'contrato';
+    else if (/^\[(app|ponte|movel)\]/.test(s)) p.className = 'local';
+    f.append(p);
+    while (f.childElementCount > 500) f.firstElementChild.remove();
+    if (fim) f.scrollTop = f.scrollHeight;
+  },
+  imagem(uri, resumo) {
+    $('imagem').src = uri; $('imagem').style.display = 'block';
+    $('imagem').scrollIntoView({block: 'center'});
+  },
+  arquivo(resumo) { tela.linha('[app] recebido: ' + resumo); },
+  limpa() {
+    $('fita').textContent = ''; $('imagem').style.display = 'none';
+    $('chegou').textContent = 'Nada ainda.'; $('chegou').className = 'papel conversa vazio'; jaLido = 0; $('fita-bytes').hidden = true;
+    $('barra-rec').hidden = true; $('b-rec').style.width = '0';
+    cc.fillStyle = PAPEL; cc.fillRect(0, 0, cascata.width, cascata.height);
+  },
+};
+window.tela = tela;
+
+document.querySelectorAll('[name=papel]').forEach(r => r.addEventListener('change', () => document.body.dataset.papel = r.value));
+document.querySelectorAll('[name=negociacao]').forEach(r => r.addEventListener('change', () => $('parametros').hidden = r.value !== 'manual' || !r.checked));
+function manual() {
+  if (document.querySelector('[name=negociacao]:checked').value !== 'manual') return '';
+  return JSON.stringify({modulacao: $('m-modulacao').value, baud: $('m-baud').value, rep: $('m-rep').value,
+                         caixa: $('m-caixa').value, tom_base: $('m-base').value, passo_tom: $('m-passo').value,
+                         ack: $('m-ack').checked});
+}
+const papel = () => document.querySelector('[name=papel]:checked').value;
+
+// Parar exige segurar: um toque sem querer encerraria uma sessão de minutos, e o
+// outro lado ficaria repetindo para ninguém.
+let segura = null;
+const solta = () => { clearTimeout(segura); segura = null; $('enche').classList.remove('segura'); };
+$('acao').addEventListener('contextmenu', e => e.preventDefault());
+$('acao').addEventListener('pointerdown', e => {
+  if (!document.body.classList.contains('ligada')) return;
+  $('acao').setPointerCapture(e.pointerId);
+  $('enche').classList.add('segura');
+  segura = setTimeout(() => { solta(); nativo.parar(); $('acao-t').textContent = 'Parando…'; }, 900);
+});
+['pointerup', 'pointerleave', 'pointercancel'].forEach(t => $('acao').addEventListener(t, solta));
+$('acao').addEventListener('click', e => {
+  if (document.body.classList.contains('ligada')) { if (e.detail === 0) nativo.parar(); return; }
+  const t = $('texto').value; $('texto').value = '';
+  tela.limpa(); if (t) fala('eu', t); nativo.iniciar(papel(), t, manual());
+});
+function envia() { const t = $('texto').value; if (t && !$('enviar').disabled) { nativo.enviar(t); fala('eu', t); $('texto').value = ''; } }
+$('enviar').addEventListener('click', envia);
+$('texto').addEventListener('keydown', e => { if (e.key === 'Enter') envia(); });
+$('repetir').addEventListener('click', () => nativo.repetir(papel()));
+</script>
+</body>
+</html>
