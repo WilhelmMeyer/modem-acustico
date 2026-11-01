@@ -6,9 +6,9 @@ plugins {
     id("com.chaquo.python")
 }
 
-// O protocolo é o da raiz do repositório, copiado a cada build e nunca editado
+// O protocolo é o de src/, copiado a cada build e nunca editado
 // aqui: uma cópia à mão acabaria falando outra coisa no fio que o PC.
-val raiz = rootDir.parentFile
+val raiz = File(rootDir.parentFile, "src")
 val arquivosProtocolo = listOf("fec.py", "modem.py", "xfer.py", "enlace.py", "enlace2.py", "enlace_manual.py")
 val protocolo = layout.buildDirectory.dir("protocolo").get().asFile
 copy {
